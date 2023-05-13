@@ -112,7 +112,7 @@ export class JSTweakElement {
     if (typeof callback === "function") {
       callback("example");
     } else if (!callback) {
-      throw new Error("Expected function as parameter of ElementsList.then(), received null");
+      throw new Error("Expected function in .then() call");
     } else if (callback) {
       throw new Error(`Expected parameter of type function, instead received ${typeof callback}: ${callback}`);
     }

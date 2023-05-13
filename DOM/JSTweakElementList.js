@@ -69,4 +69,16 @@ export class JSTweakElementList {
       el.attr("style", styleString);
     });
   }
+
+  then(callback) {
+    if (typeof callback === "function") {
+      callback("example");
+    } else if (!callback) {
+      throw new Error("Expected function in .then() call");
+    } else if (callback) {
+      throw new Error(`Expected parameter of type function, instead received ${typeof callback}: ${callback}`);
+    }
+
+    return this;
+  }
 }
