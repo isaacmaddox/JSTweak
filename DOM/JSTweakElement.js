@@ -1,9 +1,10 @@
 import JSTweakDOM from "./JSTweakDOM.js";
 
 export class JSTweakElement {
-  constructor(element) {
+  constructor(element, selector) {
     if (typeof element === "object") {
       this.Element = element[0] || element;
+      this.Selector = selector;
     } else {
       throw new Error("Expected argument of type object.");
     }
@@ -66,7 +67,9 @@ export class JSTweakElement {
         }
       }
 
-      if (typeof attributes === "string" && values === undefined) {
+      if (typeof attributes === "string" && typeof values === "string") {
+        this.Element.setAttribute(attributes, values);
+      } else if (typeof attributes === "string" && values === undefined) {
         return this.Element.getAttribute(attributes);
       } else if (typeof attributes === "object" && values === undefined) {
         return attributes.map((attr) => {
@@ -82,7 +85,28 @@ export class JSTweakElement {
     return this;
   }
 
-  data(attributes, values) {}
+  style(props) {
+    if (typeof props !== "object") {
+      throw new Error("Element.style() expects an argument of type object");
+    }
+
+    let styleString = this.attr("style") || "";
+    styleString = styleString === "" || styleString.endsWith(";") ? styleString : `${styleString};`;
+
+    for (const [key, value] of Object.entries(props)) {
+      let reg = new RegExp(`${key}:.+;`, "g");
+      styleString = styleString.replace(reg, "");
+      styleString += `${key}: ${value};`;
+    }
+
+    this.attr("style", styleString);
+
+    return this;
+  }
+
+  children(selector = "*") {
+    return $(`${this.Selector} ${selector}`);
+  }
 
   then(callback) {
     if (typeof callback === "function") {

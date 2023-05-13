@@ -1,10 +1,12 @@
+import { JSTweakElement } from "./JSTweakElement.js";
+
 export class JSTweakElementList {
-  constructor(elements) {
+  constructor(elements, selector = "") {
     this.Elements = [];
 
     if (typeof elements === "object") {
       for (const element of elements) {
-        this.Elements.push(new JSTweakElement(element));
+        this.Elements.push(new JSTweakElement(element, selector));
       }
     } else if (typeof elements === "array") {
       this.Elements === elements;
@@ -43,5 +45,28 @@ export class JSTweakElementList {
 
   attr(...x) {
     throw new Error(".attr() can only be called on type JSTweakElement");
+  }
+
+  children(...x) {
+    throw new Error(".children() can only be called on type JSTweakElement");
+  }
+
+  style(props) {
+    if (typeof props !== "object") {
+      throw new Error("Element.style() expects an argument of type object");
+    }
+
+    this.each((el) => {
+      let styleString = el.attr("style") || "";
+      styleString = styleString === "" || styleString.endsWith(";") ? styleString : `${styleString};`;
+
+      for (const [key, value] of Object.entries(props)) {
+        let reg = new RegExp(`${key}:.+;`, "g");
+        styleString = styleString.replace(reg, "");
+        styleString += `${key}: ${value};`;
+      }
+
+      el.attr("style", styleString);
+    });
   }
 }
