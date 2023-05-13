@@ -9,8 +9,13 @@ export class JSTweakElement {
       throw new Error("Expected argument of type object.");
     }
 
+    this.updateProps();
+  }
+
+  updateProps() {
     this.classes = this.Element.classList;
     this.attributes = this.Element.attributes;
+    this.style = this.Element.style;
   }
 
   addClass(classList) {
@@ -23,6 +28,8 @@ export class JSTweakElement {
     } catch (error) {
       console.error(error);
     }
+
+    this.updateProps();
 
     return this;
   }
@@ -38,6 +45,8 @@ export class JSTweakElement {
       console.error(error);
     }
 
+    this.updateProps();
+
     return this;
   }
 
@@ -51,6 +60,8 @@ export class JSTweakElement {
     } catch (error) {
       console.error(error);
     }
+
+    this.updateProps();
 
     return this;
   }
@@ -81,6 +92,8 @@ export class JSTweakElement {
     } catch (error) {
       console.error(error);
     }
+
+    this.updateProps();
 
     return this;
   }
